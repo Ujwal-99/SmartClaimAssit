@@ -29,41 +29,41 @@ export default function Login() {
 
     try {
 
-      const res = await fetch("https://smartclaimassit.onrender.com/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          email,
-          password
-        })
-      });
+      // GET USER FROM LOCAL STORAGE
+      const savedUser = localStorage.getItem(email);
 
-      const data = await res.json();
+      if (!savedUser) {
 
-      if (res.ok && data.token) {
-
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("userId", data.userId);
-        localStorage.setItem("currentUser", email);
-
-        alert("Login Successful");
-
-        navigate("/dashboard");
-
-      } 
-      else {
-
-        alert(data.message || "Invalid email or password");
+        alert("User not found");
+        setLoading(false);
+        return;
 
       }
+
+      const userData = JSON.parse(savedUser);
+
+      // CHECK PASSWORD
+      if (userData.password !== password) {
+
+        alert("Invalid password");
+        setLoading(false);
+        return;
+
+      }
+
+      // SAVE LOGIN SESSION
+      localStorage.setItem("currentUser", email);
+
+      alert("Login Successful");
+
+      navigate("/dashboard");
 
     } 
     catch (error) {
 
       console.error("Login error:", error);
-      alert("Server error. Check backend.");
+
+      alert("Login failed");
 
     }
 
@@ -172,4 +172,5 @@ export default function Login() {
 
   );
 
+}
 }
