@@ -37,9 +37,13 @@ const AppLayout = ({ children }: AppLayoutProps) => {
   // Logged in user
   const currentUser = localStorage.getItem("currentUser");
 
-  // 🔴 Logout ONLY navigates (no data removal)
+  // Logout
   const handleLogout = () => {
+
+    localStorage.removeItem("currentUser");
+
     navigate("/login");
+
   };
 
   return (
@@ -53,6 +57,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
 
           {/* Logo */}
           <Link to="/dashboard" className="flex items-center gap-2">
+
             <div className="h-8 w-8 rounded-lg gradient-primary flex items-center justify-center">
               <Shield className="h-4 w-4 text-primary-foreground" />
             </div>
@@ -60,16 +65,19 @@ const AppLayout = ({ children }: AppLayoutProps) => {
             <span className="font-display text-lg font-bold text-foreground">
               ClaimAssist
             </span>
+
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-1">
 
             {navItems.map((item) => {
+
               const Icon = item.icon;
               const isActive = location.pathname === item.path;
 
               return (
+
                 <Link
                   key={item.path}
                   to={item.path}
@@ -79,21 +87,31 @@ const AppLayout = ({ children }: AppLayoutProps) => {
                       : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
                   }`}
                 >
+
                   <Icon className="h-4 w-4" />
+
                   {item.label}
+
                 </Link>
+
               );
+
             })}
 
-            {/* Logout */}
+            {/* Desktop Logout */}
             {currentUser && (
+
               <button
                 onClick={handleLogout}
                 className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-red-500 hover:bg-red-100"
               >
+
                 <LogOut className="h-4 w-4" />
+
                 Logout
+
               </button>
+
             )}
 
           </nav>
@@ -104,10 +122,12 @@ const AppLayout = ({ children }: AppLayoutProps) => {
         <nav className="md:hidden flex overflow-x-auto border-t border-border px-2 py-1.5 gap-1">
 
           {navItems.map((item) => {
+
             const Icon = item.icon;
             const isActive = location.pathname === item.path;
 
             return (
+
               <Link
                 key={item.path}
                 to={item.path}
@@ -117,11 +137,32 @@ const AppLayout = ({ children }: AppLayoutProps) => {
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
+
                 <Icon className="h-4 w-4" />
+
                 {item.label}
+
               </Link>
+
             );
+
           })}
+
+          {/* Mobile Logout */}
+          {currentUser && (
+
+            <button
+              onClick={handleLogout}
+              className="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-lg text-xs font-medium text-red-500 whitespace-nowrap"
+            >
+
+              <LogOut className="h-4 w-4" />
+
+              Logout
+
+            </button>
+
+          )}
 
         </nav>
 
@@ -140,6 +181,7 @@ const AppLayout = ({ children }: AppLayoutProps) => {
     </div>
 
   );
+
 };
 
 export default AppLayout;
