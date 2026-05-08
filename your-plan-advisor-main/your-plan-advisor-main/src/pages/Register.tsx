@@ -35,30 +35,36 @@ export default function Register() {
 
     try {
 
-      const res = await fetch("https://smartclaimassit.onrender.com/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          name,
-          email,
-          password
-        })
-      });
+      // CHECK IF USER ALREADY EXISTS
+      const existingUser = localStorage.getItem(email);
 
-      const data = await res.json();
+      if (existingUser) {
 
-      alert(data.message || "Registration successful");
+        alert("User already exists");
+        setLoading(false);
+        return;
 
-      if (res.ok) {
-        navigate("/login");
       }
 
-    } catch (err) {
+      // SAVE USER TO LOCAL STORAGE
+      const userData = {
+        name,
+        email,
+        password
+      };
+
+      localStorage.setItem(email, JSON.stringify(userData));
+
+      alert("Registration successful");
+
+      navigate("/login");
+
+    } 
+    catch (err) {
 
       console.error("Register error:", err);
-      alert("Server error");
+
+      alert("Registration failed");
 
     }
 
